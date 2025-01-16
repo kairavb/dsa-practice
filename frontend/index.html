@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeetCode Style Layout</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Top Navbar */
+        .navbar {
+            height: 50px;
+            background: #333;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .navbar-center {
+            text-align: center;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Left Section (Fixed) */
+        .left-section {
+            width: 4%;
+            background: #f4f4f4;
+            padding: 10px;
+            border-right: 1px solid #ddd;
+        }
+
+        .problem-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .problem-list li {
+            padding: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* Middle Section (Resizable) */
+        .middle-section {
+            flex: 1;
+            background: white;
+            padding: 10px;
+        }
+
+        /* Right Section (Resizable with Split) */
+        .resizable-line {
+            cursor: col-resize;
+            width: 5px;
+            background: #ccc;
+        }
+
+        .right-section {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-top {
+            flex: 1;
+            background: #e0e0e0;
+            padding: 10px;
+        }
+
+        .right-bottom {
+            flex: 1;
+            background: #d4d4d4;
+            padding: 10px;
+            min-height: 50px;
+        }
+
+        .resizable-line-horizontal {
+            cursor: row-resize;
+            height: 5px;
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div>Logo</div>
+        <div class="navbar-center">LeetCode Style Layout</div>
+        <div>User Profile</div>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Fixed Section with Problem Numbers -->
+        <div class="left-section">
+            <ul class="problem-list">
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+                <li>4</li>
+                <li>5</li>
+            </ul>
+        </div>
+
+        <!-- Middle Section with Resizable Line -->
+        <div class="middle-section">Coding Area</div>
+
+        <div class="resizable-line" id="resizer"></div>
+
+        <!-- Right Section with Split -->
+        <div class="right-section">
+            <div class="right-top">Test Cases</div>
+            <div class="resizable-line-horizontal" id="resizer-horizontal"></div>
+            <div class="right-bottom">Console Output</div>
+        </div>
+    </div>
+
+    <script>
+        // Vertical Resizer Between Middle and Right Section
+        const resizer = document.getElementById('resizer');
+        const middle = document.querySelector('.middle-section');
+        const right = document.querySelector('.right-section');
+
+        resizer.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', () => {
+                document.removeEventListener('mousemove', resize);
+            });
+        });
+
+        function resize(event) {
+            const offsetRight = window.innerWidth - event.clientX;
+            right.style.width = `${offsetRight}px`;
+        }
+
+        // Horizontal Resizer for Right Section
+        const resizerHorizontal = document.getElementById('resizer-horizontal');
+        const rightTop = document.querySelector('.right-top');
+        const rightBottom = document.querySelector('.right-bottom');
+
+        resizerHorizontal.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            document.addEventListener('mousemove', resizeHorizontal);
+            document.addEventListener('mouseup', () => {
+                document.removeEventListener('mousemove', resizeHorizontal);
+            });
+        });
+
+        function resizeHorizontal(event) {
+            const containerHeight = right.clientHeight;
+            const topHeight = event.clientY - right.getBoundingClientRect().top;
+            rightTop.style.flex = `0 0 ${topHeight}px`;
+            rightBottom.style.flex = `1`;
+            rightBottom.style.minHeight = '50px';
+        }
+    </script>
+</body>
+</html>
